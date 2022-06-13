@@ -1,6 +1,6 @@
 import * as THREE from './../../libs/three/three.module.js';
 import { OrbitControls } from './../../libs/three/jsm/OrbitControls.js';
-import { VRButton } from './../../libs/three/jsm/VRButton.js';
+import { ARButton } from './../../libs/ARButton.js';
 import { XRControllerModelFactory } from './../../libs/three/jsm/XRControllerModelFactory.js';
 import { BoxLineGeometry } from './../../libs/three/jsm/BoxLineGeometry.js';
 import { Stats } from './../../libs/stats.module.js';
@@ -53,30 +53,24 @@ class App{
     }
     
     initScene(){
-        this.radius = 0.08;
-
-        this.room= new THREE.LineSegments(
-            new BoxLineGeometry(5,5,5,10,10,10),
-            new THREE.LineBasicMaterial({color: 0x080808})
-        );
-
-        this.room.geometry.translate(0 ,2.5 ,0);
-        this.scene.add ( this.room );
-        const geometry = new THREE.IcosahedronBufferGeometry(this.radius, 2);
-        for(let i=0;i<200;i++)
-        {
-            const object = new THREE.Mesh(geometry,new THREE.MeshLambertMaterial({ color: Math.random() * 0xFFFFFF }));
-            object.position.x = this.random(-2,2);
-            object.position.y = this.random(-2,2);
-            object.position.z = this.random(-2,2);
-
-            this.room.add( object );
-        }
-
+        this.geometry = new THREE.BoxBufferGeometry(0.06,0.06,0.06);
+        this.meshs = [];
     }
     
     setupXR(){
-        
+        this.renderer.xr.enabled= true;
+        const self = this;
+        let controller;
+        function onSelect(){
+
+        }
+        const btn = new ARButton( this.renderer );
+        controller = this.renderer.xr.getController(0);
+        controller.addEventListener('select', onSelect);
+        this.scene.add(controller);
+
+
+        this.renderer.setAnimationLoop( this.render.bind(this) );
     }
     
     resize(){
@@ -87,7 +81,9 @@ class App{
     
 	render( ) {   
         this.stats.update();
-        
+        // //la siguiente linea la agregue por temas practicos// //
+        this.meshs.forEach((mesh)=>{mesh.rotateY(0.01); });
+        // // // // // // // // // // // // // // // // // // // //
         this.renderer.render( this.scene, this.camera );
     }
 }
