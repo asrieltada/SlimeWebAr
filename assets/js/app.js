@@ -69,7 +69,7 @@ class App{
 				};
 
                 var newMaterial = new THREE.MeshStandardMaterial({color: 0xff0000});
-                self.slime.traverse((o) => {
+                self.scene.traverse((o) => {
                     if (o.isMesh) o.material = newMaterial;
                   });
 				
