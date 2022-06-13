@@ -62,9 +62,24 @@ class App{
         const self = this;
         let controller;
         function onSelect(){
+            const material = new THREE.MeshPhongMaterial({color:0xFFFFFF * Math.random()});
+            const mesh = new THREE.Mesh(self.geometry, material);
+            
+            mesh.position.set(0,0,0.3).applyMatrix(controller.matrixWorld);
+            mesh.applyQuaternion.setFromRotationMatrix( controller.matrixWorld);
+            
+            self.scene.add(mesh);
+            self.scene.push(mesh);
 
         }
-        const btn = new ARButton( this.renderer );
+
+        // agregas el boton asi pero esto es con la instanciacion de la libreria modificada
+        // en caso de que quieras ocupar la libreria original ocupa los siguientes lineas de codigo 
+        // document.body.apppendChild(
+        //      ARButton.createButton ( this.renderer );   
+        // );
+        // En este caso ocuparemos la libreria modificada por Nik Lever
+        const btn = new ARButton( this.renderer ); // esta linea (Nik L)
         controller = this.renderer.xr.getController(0);
         controller.addEventListener('select', onSelect);
         this.scene.add(controller);
