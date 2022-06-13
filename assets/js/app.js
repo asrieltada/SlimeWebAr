@@ -56,7 +56,7 @@ class App{
 				const options = {
 					object: object,
 					speed: 0.5,
-					assetsPath: '../3d/slime.glb',
+					assetsPath: '../3d/',
 					loader: loader,
                     animations: gltf.animations,
 					clip: gltf.animations[0],
@@ -68,7 +68,7 @@ class App{
 				self.slime = new Player(options);
                 self.slime.object.visible = false;
 				
-				self.slime.action = 'Dance';
+				self.slime.action = 'animation_0';
 				const scale = 0.005;
 				self.slime.object.scale.set(scale, scale, scale); 
 				
@@ -91,6 +91,13 @@ class App{
     }
     initScene(){
         this.loadModelA();   
+        this.reticle = new THREE.Mesh(
+            new THREE.RingBufferGeometry( 0.15 ,0.2 ,32 ).rotateX(-Math.PI/2),
+            new THREE.MeshBasicMaterial( { color: 0xFFFFFF } )
+        );
+        this.reticle.matrixAutoUpdate = false;
+        this.reticle.visible = false;
+        this.scene.add( this.reticle );
     }
     
     setupXR(){
@@ -111,7 +118,8 @@ class App{
         this.controller = this.renderer.xr.getController( 0 );
         this.controller.addEventListener( 'select', onSelect );
         
-        this.scene.add( this.controller );    
+        this.scene.add( this.controller );  
+
         // agregas el boton asi pero esto es con la instanciacion de la libreria modificada
         // en caso de que quieras ocupar la libreria original ocupa los siguientes lineas de codigo 
         // document.body.apppendChild(
@@ -122,12 +130,36 @@ class App{
     }
 
     requestHitTestSource(){
-        
+        const self = this;
+        const session = this.renderer.xr.getSession();
+        session.requestReferenceSpace ('viewer').then(function(referenceSpace){
+            session.requestHitTestSource({space: referenceSpace}).then(
+                function(source){
+                    self.hitTestSource = source;
+                })
+        });
+        session.addEventListener('end',function(){
+            self.hitTestSourceRequested = false;
+            self.hitTestSource = null;
+            self.referenceSpace = null;
+        });
+        this.hitTestSourceRequested = true;
+
 
     }
     
     getHitTestResults( frame ){
-        
+        const hitTestResult = frame.getHitTestResults(this.hitTestSource);
+        if(hitTestResult.length){
+            const referenceSpace = this.renderer.xr.getReferenceSpace();
+            const hit = hitTestResult[0];
+            const pose = hit.getPose(referenceSpace);
+            this.reticle.visible = true;
+            this.reticle.matrix.fromArray(pose.transform.matrix);
+
+        }else{
+            this.reticle.visible = false;
+        }
     }
     
     resize(){
