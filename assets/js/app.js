@@ -1,5 +1,5 @@
-import * as THREE from './../libs/three/three.module.js';
-import { OrbitControls } from './../libs/three/jsm/OrbitControls.js';
+import * as THREE from './libs/three/three.module.js';
+import { OrbitControls } from './libs/three/jsm/OrbitControls.js';
 //import { VRButton } from '../../../libs/three/jsm/VRButton.js';
 //import { XRControllerModelFactory } from '../../../libs/three/jsm/XRControllerModelFactory.js';
 //import { BoxLineGeometry } from '../../../libs/three/jsm/BoxLineGeometry.js';
