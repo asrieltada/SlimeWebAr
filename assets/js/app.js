@@ -13,6 +13,8 @@ class App{
         this.clock = new THREE.Clock();
         
         this.loadingBar = new LoadingBar();
+
+		//this.assetsPath = '../../assets/';
         
 		this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
 		this.camera.position.set( 0, 1.6, 3 );
@@ -32,6 +34,7 @@ class App{
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 		this.renderer.outputEncoding = THREE.sRGBEncoding;
 		container.appendChild( this.renderer.domElement );
+        //this.setEnvironment();
         
         this.workingVec3 = new THREE.Vector3();
         
