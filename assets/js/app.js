@@ -14,7 +14,7 @@ class App{
         
         this.loadingBar = new LoadingBar();
 
-		//this.assetsPath = '../../assets/';
+		//this.assetsPath = '../SlimeWebAr/assets/';
         
 		this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
 		this.camera.position.set( 0, 1.6, 3 );
@@ -51,7 +51,7 @@ class App{
 		// Load a GLTF resource
 		loader.load(
 			// resource URL
-			`./../3d/slime.glb`,
+			`./SlimeWebAr/assets/3d/slime.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
 				const object = gltf.scene.children[5];
@@ -59,7 +59,7 @@ class App{
 				const options = {
 					object: object,
 					speed: 0.5,
-					assetsPath: './../3d/',
+					assetsPath: './SlimeWebAr/assets/3d/',
 					loader: loader,
                     animations: gltf.animations,
 					clip: gltf.animations[0],
