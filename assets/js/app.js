@@ -54,7 +54,7 @@ class App{
             const material = new THREE.MeshPhongMaterial({color:0xFFFFFF * Math.random()});
             const mesh = new THREE.Mesh(self.geometry, material);
             
-            mesh.position.set(0,0,0.3).applyMatrix(controller.matrixWorld);
+            mesh.position.set(0,0,-0.3).applyMatrix4(controller.matrixWorld);
             mesh.applyQuaternion.setFromRotationMatrix( controller.matrixWorld);
             
             self.scene.add(mesh);
@@ -69,8 +69,10 @@ class App{
         // );
         // En este caso ocuparemos la libreria modificada por Nik Lever
         const btn = new ARButton( this.renderer ); // esta linea (Nik L)
+
         controller = this.renderer.xr.getController(0);
         controller.addEventListener('select', onSelect);
+
         this.scene.add(controller);
 
 
