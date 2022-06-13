@@ -1,20 +1,18 @@
-import * as THREE from '../../libs/three/three.module.js';
+import * as THREE from '../../libs/three125/three.module.js';
 import { GLTFLoader } from '../../libs/three/jsm/GLTFLoader.js';
 import { RGBELoader } from '../../libs/three/jsm/RGBELoader.js';
+import { OrbitControls } from '../../libs/three125/OrbitControls.js';
+import { Stats } from '../../libs/stats.module.js';
 import { ARButton } from '../../libs/ARButton.js';
-import { LoadingBar } from '../../libs/LoadingBar.js';
-import { Player } from '../../libs/Player.js';
 
 class App{
-	constructor(){
+    constructor(){
 		const container = document.createElement( 'div' );
 		document.body.appendChild( container );
         
         this.clock = new THREE.Clock();
         
         this.loadingBar = new LoadingBar();
-
-		this.assetsPath = '../../assets/';
         
 		this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
 		this.camera.position.set( 0, 1.6, 3 );
@@ -34,7 +32,6 @@ class App{
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 		this.renderer.outputEncoding = THREE.sRGBEncoding;
 		container.appendChild( this.renderer.domElement );
-        this.setEnvironment();
         
         this.workingVec3 = new THREE.Vector3();
         
@@ -44,39 +41,14 @@ class App{
 		window.addEventListener('resize', this.resize.bind(this));
         
 	}
-    
-    setEnvironment(){
-        //const loader = new RGBELoader().setDataType( THREE.UnsignedByteType );
-        //const pmremGenerator = new THREE.PMREMGenerator( this.renderer );
-        //pmremGenerator.compileEquirectangularShader();
-        //
-        //const self = this;
-        //
-        //loader.load( '../../assets/hdr/venice_sunset_1k.hdr', ( texture ) => {
-        //  const envMap = pmremGenerator.fromEquirectangular( texture ).texture;
-        //  pmremGenerator.dispose();
-//
-        //  self.scene.environment = envMap;
-//
-        //}, undefined, (err)=>{
-        //    console.error( 'An error occurred setting the environment');
-        //} );
-    }
-	
-    resize(){ 
-        this.camera.aspect = window.innerWidth / window.innerHeight;
-    	this.camera.updateProjectionMatrix();
-    	this.renderer.setSize( window.innerWidth, window.innerHeight );  
-    }
-    
-    loadSlime(){
-	    const loader = new GLTFLoader().setPath(this.assetsPath);
+    loadModelA(){
+        const loader = new GLTFLoader();
 		const self = this;
 		
 		// Load a GLTF resource
 		loader.load(
 			// resource URL
-			'../SlimeWebAr/assets/3d/slime.glb',
+			'../3d/slime.glb',
 			// called when the resource is loaded
 			function ( gltf ) {
 				const object = gltf.scene.children[5];
@@ -84,7 +56,7 @@ class App{
 				const options = {
 					object: object,
 					speed: 0.5,
-					assetsPath: self.assetsPath,
+					assetsPath: '../3d/slime.glb',
 					loader: loader,
                     animations: gltf.animations,
 					clip: gltf.animations[0],
@@ -116,13 +88,13 @@ class App{
 
 			}
 		);
-	}		
-    
+    }
     initScene(){
-        this.loadSlime();
+        this.loadModelA();   
     }
     
     setupXR(){
+        
         this.renderer.xr.enabled = true;
         
         const btn = new ARButton( this.renderer, { sessionInit: { requiredFeatures: [ 'hit-test' ], optionalFeatures: [ 'dom-overlay' ], domOverlay: { root: document.body } } } );
@@ -140,8 +112,15 @@ class App{
         this.controller.addEventListener( 'select', onSelect );
         
         this.scene.add( this.controller );    
+        // agregas el boton asi pero esto es con la instanciacion de la libreria modificada
+        // en caso de que quieras ocupar la libreria original ocupa los siguientes lineas de codigo 
+        // document.body.apppendChild(
+        //      ARButton.createButton ( this.renderer );   
+        // );
+        // En este caso ocuparemos la libreria modificada por Nik Lever
+        // const btn = new ARButton( this.renderer ); // esta linea (Nik L)
     }
-    
+
     requestHitTestSource(){
         
 
@@ -150,7 +129,13 @@ class App{
     getHitTestResults( frame ){
         
     }
-
+    
+    resize(){
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize( window.innerWidth, window.innerHeight );  
+    }
+    
     render( timestamp, frame ) {
         const dt = this.clock.getDelta();
         if (this.slime) this.slime.update(dt);
@@ -170,3 +155,5 @@ class App{
 }
 
 export { App };
+
+
