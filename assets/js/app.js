@@ -67,6 +67,11 @@ class App{
 					name: 'slime',
 					npc: false
 				};
+
+                var newMaterial = new THREE.MeshStandardMaterial({color: 0xff0000});
+                self.slime.traverse((o) => {
+                    if (o.isMesh) o.material = newMaterial;
+                  });
 				
 				self.slime = new Player(options);
                 self.slime.object.visible = false;
