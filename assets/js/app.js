@@ -51,7 +51,7 @@ class App{
 		// Load a GLTF resource
 		loader.load(
 			// resource URL
-			'../3d/slime.glb',
+			`./../3d/slime.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
 				const object = gltf.scene.children[5];
@@ -59,7 +59,7 @@ class App{
 				const options = {
 					object: object,
 					speed: 0.5,
-					assetsPath: '../3d/',
+					assetsPath: './../3d/',
 					loader: loader,
                     animations: gltf.animations,
 					clip: gltf.animations[0],
