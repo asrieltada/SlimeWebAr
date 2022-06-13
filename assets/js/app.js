@@ -48,6 +48,7 @@ class App{
     setupXR(){
         
         this.renderer.xr.enabled= true;
+
         const self = this;
         let controller;
         function onSelect(){
@@ -55,7 +56,7 @@ class App{
             const mesh = new THREE.Mesh(self.geometry, material);
             
             mesh.position.set(0,0,-0.3).applyMatrix4(controller.matrixWorld);
-            mesh.applyQuaternion.setFromRotationMatrix( controller.matrixWorld);
+            mesh.quaternion.setFromRotationMatrix( controller.matrixWorld);
             
             self.scene.add(mesh);
             self.scene.push(mesh);
