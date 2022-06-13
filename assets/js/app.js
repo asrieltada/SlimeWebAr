@@ -76,7 +76,7 @@ class App{
 		// Load a GLTF resource
 		loader.load(
 			// resource URL
-			`../3d/slime.glb`,
+			`./../3d/slime.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
 				const object = gltf.scene.children[5];
