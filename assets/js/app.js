@@ -34,7 +34,7 @@ class App{
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 		this.renderer.outputEncoding = THREE.sRGBEncoding;
 		container.appendChild( this.renderer.domElement );
-        //this.setEnvironment();
+        this.setEnvironment();
         
         this.workingVec3 = new THREE.Vector3();
         
@@ -44,6 +44,26 @@ class App{
 		window.addEventListener('resize', this.resize.bind(this));
         
 	}
+    
+    
+    setEnvironment(){
+        const loader = new RGBELoader().setDataType( THREE.UnsignedByteType );
+        const pmremGenerator = new THREE.PMREMGenerator( this.renderer );
+        pmremGenerator.compileEquirectangularShader();
+        
+        const self = this;
+        
+        loader.load( './assets/3d/green.png', ( texture ) => {
+          const envMap = pmremGenerator.fromEquirectangular( texture ).texture;
+          pmremGenerator.dispose();
+
+          self.scene.environment = envMap;
+
+        }, undefined, (err)=>{
+            console.error( 'An error occurred setting the environment');
+        } );
+    }
+
     loadModelA(){
         const loader = new GLTFLoader();
 		const self = this;
@@ -77,7 +97,7 @@ class App{
                 self.slime.object.visible = false;
 				
 				self.slime.action = 'animation_0';
-				const scale = 0.005;
+				const scale = 1;
 				self.slime.object.scale.set(scale, scale, scale); 
 				
                 self.loadingBar.visible = false;
