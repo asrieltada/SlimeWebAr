@@ -97,9 +97,7 @@ class App{
 				self.slime.action = 'animation_0';
 				const scale = 1;
 				self.slime.object.scale.set(scale, scale, scale); 
-				self.slime.traverse((o) => {
-                    if (o.isMesh) o.material = newMaterial;
-                });
+                self.slime.MeshBasicMaterial=newMaterial;
                 self.loadingBar.visible = false;
                 self.renderer.setAnimationLoop( self.render.bind(self) );
 			},
