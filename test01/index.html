@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" type="text/css" href="assets/css/animat.css">
+        <script src="assets/js/Lib/aframe_1.2.0.min.js"></script>
+        <script src="assets/js/Lib/aframe-extras.min.js"  ></script>  
+        <script src="assets/js/Lib/aframe-ar.min.js"  ></script>
+        
+
+    </head>
+    <body style="margin: 0px; overflow: hidden" >
+    <script>
+    
+            AFRAME.registerComponent('registerevents',{
+                init: function (){
+                    var marker = this.el;
+                    marker.setAttribute('emitevents','true');
+                    marker.addEventListener('markerFound',function(){
+                        let markerId=marker.id;
+                        console.log('markerFound',markerId);
+                        //aqui agregas las acciones para hacer funcionar la animacion(cambiar)
+                        // identifico el objeto
+                        var ela = document.querySelector('#francisca');
+                        var entityty = document.querySelector('[sound]');
+                        entityty.components.sound.playSound();   
+                        ela.setAttribute('animation-mixer', {clip: 'animation_0'});
+                        ela.emit('animation-mixer');
+                        
+                        setTimeout(() => {
+
+                            ela.setAttribute('animation-mixer', {clip: 'none'});
+
+                            ela.emit('animation-mixer');
+                            
+
+                            }, 33000);
+                        
+                       
+
+                        });
+
+                    marker.addEventListener('markerLost',function(){
+                        let markerId=marker.id;
+                        console.log('markerLost',markerId);
+                        //aqui es cuando pierdes el objetivo
+                        
+                        var ela = document.querySelector('#francisca');
+                        var entityty = document.querySelector('[sound]');
+                        entityty.components.sound.stopSound();
+
+                        ela.setAttribute('animation-mixer', {clip: 'none'});
+                        ela.emit('animation-mixer');
+       
+                    });
+
+                },
+            });
+
+
+            
+
+        </script>
+         <a-scene arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;" renderer="logarithmicDepthBuffer: true;"  embedded=' debugUIEnabled: false' vr-mode-ui="enabled: false">
+            <a-assets>
+                
+                <a-asset-item id="Model" src="3D/slime.glb">
+                <sound id="audioa" src="assets/Audio/06.mp3"   preload="auto">
+
+
+            </a-assets>
+
+            <a-marker registerevents enav-map preset='hiro' type='pattern' >     
+
+                <a-entity  id="francisca" gltf-model="#Model" scale="0.1 0.1 0.1" rotation="270 180 180" position="0 0 1"crossOrigin="anonymous" ></a-entity>
+
+
+            </a-marker>
+            <a-entity sound="src: #audioa" autoplay="false" ></a-entity>
+   
+            <a-entity camera ></a-entity>
+        </a-scene>
+
+    </body>
+</html>
